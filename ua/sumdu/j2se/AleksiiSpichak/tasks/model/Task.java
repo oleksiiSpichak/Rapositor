@@ -54,7 +54,7 @@ public class Task extends TimerTask implements Cloneable, Serializable{
 
     public void setTime(Date time){
         if (time == null){
-            throw new NumberFormatException("time must be positive");
+            throw new NumberFormatException("time must be positive ");
         }else
         {
             if (isRepeated()){
@@ -99,7 +99,7 @@ public class Task extends TimerTask implements Cloneable, Serializable{
 
     public void setTime(Date start,Date end, int interval){
         if(start == null) {
-            throw new ArithmeticException("start must be positive");
+            throw new ArithmeticException("start must be positive ");
         }
 
         if(end.compareTo(start)<=0){
@@ -204,13 +204,13 @@ public class Task extends TimerTask implements Cloneable, Serializable{
             return (Task)super.clone();
         }
         catch (CloneNotSupportedException e){
-            System.out.println(" not supported exception");
+            System.out.println(" not supported exception ");
         }
         return null;
     }
 
     @Override
     public void run() {
-       System.out.println( "Task " + this.getTitle() +" is started");
+       System.out.println( "Task " + this.getTitle() +" is started ");
     }
 }

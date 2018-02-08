@@ -3,7 +3,6 @@ package ua.sumdu.j2se.AleksiiSpichak.tasks.view;
 import ua.sumdu.j2se.AleksiiSpichak.tasks.model.ArrayTaskList;
 import ua.sumdu.j2se.AleksiiSpichak.tasks.model.Task;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -13,13 +12,13 @@ public class TaskManagerView {
     static SimpleDateFormat dat = new SimpleDateFormat("dd.MM.yy HH:mm");
 
     public static void listTask(ArrayTaskList tasksNew) {
-        if (tasksNew.size() == 0) {
+        if (tasksNew.size() < 0) {
             System.out.println("No Task in list");
         }
         else
             System.out.println("__List all active Task__ ");
             for (int i = 0; i < tasksNew.size(); ++i) {
-                System.out.println(tasksNew.getTask(i) + " Number in index = " + i);
+                System.out.println(tasksNew.getTask(i) + " Number #" + i);
             }
     }
     public static void menu(ArrayTaskList tasksNew) {
@@ -44,40 +43,39 @@ public class TaskManagerView {
     }
 
     public static String addNameTask() {
-        return "Ведите имя задачи";
+        return "name Task";
     }
 
     public static String addDateTask() {
-        return "введите дату в цифровом формате dd.MM.yy HH:mm";
+        return "enter the date in the format dd.MM.yy HH:mm";
     }
 
     public static void addIntervalTask() {
-        System.out.println("введите интервал");
+        System.out.println("add time interval");
     }
 
     public static String addEndTask() {
-        return "введите дату окнчания";
+        return "add end time";
     }
 
     public static void question() {
-        System.out.println("хотите добавить интервал и дату " +
-                "окончания? нажминте 9,нет - нажмите 0");
+        System.out.println("press the number 9 if you want to enter an interval, to exit press any number");
     }
 
     public static void noTask() {
-        System.out.println("нет такой задачи");
+        System.out.println("no task in list");
     }
 
     public static void delite() {
-        System.out.println("задача удалена");
+        System.out.println("task delite");
     }
 
     public static void nomer() {
-        System.out.println("введите нормер задачи");
+        System.out.println("enter number of task");
     }
 
     public static void exit() {
-        System.out.println("Для возврата в основное меню, нажминет Enter");
+        System.out.println("to exit to the main menu, press Enter");
     }
 
     public static Date getDate(String message){
@@ -89,7 +87,7 @@ public class TaskManagerView {
                 String temp = sc.nextLine();
                 return dat.parse(temp);
             } catch (Exception e) {
-                System.out.println("Вы ввели не дату! Введите дату");
+                System.out.println("you did not enter a date!");
                 return getDate(message);
             }return getDate(message);
     }
@@ -103,7 +101,7 @@ public class TaskManagerView {
             return sc.nextLine();
         }else
         {
-            System.out.println("Wrong name  , please  type correct name");
+            System.out.println("Wrong name, please  type correct name");
             return  readName(message);
         }
     }
@@ -117,25 +115,50 @@ public class TaskManagerView {
                  TaskManagerView.noTask();
              }
         }
-        public static void calendar(ArrayTaskList tasksNew, String message) throws ParseException {
-            ArrayTaskList newList = new ArrayTaskList();
-            System.out.println(message);
-            Scanner sc = new Scanner(System.in);
-            String x = sc.nextLine();
+    public static void calendar(ArrayTaskList tasksNew, String message) {
+        ArrayTaskList newList = new ArrayTaskList();
+        System.out.println(message);
+        Scanner sc = new Scanner(System.in);
+        String x = sc.nextLine();
+        try {
             Date a = dat.parse(x);
-            System.out.println("введите дату окончания в цифровом формате dd.MM.yy HH:mm");
+            System.out.println("enter the end date in the format dd.MM.yy HH:mm");
             Scanner sq = new Scanner(System.in);
             String e = sq.nextLine();
             Date b = dat.parse(e);
-            for (Task task :tasksNew) {
-                if (task.getTime().compareTo(a)>=0 && task.getTime().compareTo(b) <=0) {
+            for (Task task : tasksNew) {
+                if (task.getTime().compareTo(a) >= 0 && task.getTime().compareTo(b) <= 0) {
                     newList.add(task);
                 }
-                if( task.getStartTime().compareTo(a) <=0 && task.getEndTime().compareTo(b) >=0){
+                if (task.getStartTime().compareTo(a) <= 0 && task.getEndTime().compareTo(b) >= 0) {
                     newList.add(task);
-                   }
-                }
-                System.out.println("Список задачь в заданом интервале  " + newList.toString());
+                } else {
+                    System.out.println("at the time you specified there is no assignment");
                 }
             }
+        }catch (Exception e) {
+            System.out.println("you did not enter a date!");
+            calendar(tasksNew, message);
+        }
+        for (Task task: newList)
+            System.out.println("list in a given interval  " + task.toString());
+    }
+    public static int readInt(String number){
+
+       Scanner scanner = new Scanner(System.in);
+        System.out.println(number);
+        if (scanner.hasNextInt()){
+
+            return scanner.nextInt();
+        }
+        else {
+            System.out.println("is a not number ");
+
+            return readInt(number);
+        }
+    }
+
+
+
+}
 

@@ -28,80 +28,74 @@ public class TaskManagerController {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     static ArrayTaskList tasksNew = new ArrayTaskList();
 
-    public static void runNen() throws IOException, ParseException,ArrayIndexOutOfBoundsException
+    public static void runNen() throws IOException, ParseException, ArrayIndexOutOfBoundsException
     {
         PropertyConfigurator.configure(path);
 
         TaskManagerView viewer = new TaskManagerView();
         if (file.length() > 0) {
-            runSignal();
+            TaskIO.readText(tasksNew, file);
+          // runSignal();
         } else {
             file.createNewFile();
         }
 
         while (true) {
             logger.debug(" we are here!!");
-            TaskManagerView.menu(tasksNew);
-            String numa = in.readLine();
-            int input = Integer.parseInt(numa);
+            viewer.menu(tasksNew);
+            int input = viewer.readInt("enter number");
             switch (input) {
                 case 1:
-                    String name = viewer.readName(TaskManagerView.addNameTask());
-                    Date date = viewer.getDate(TaskManagerView.addDateTask());
-                    TaskManagerView.question();
-                    String a = in.readLine();
-                    int inp = Integer.parseInt(a);
+                    String name = viewer.readName(viewer.addNameTask());
+                    Date date = viewer.getDate(viewer.addDateTask());
+                    viewer.question();
+                    int inp = viewer.readInt(" ");
+                        if (inp == 9) {
+                            viewer.addIntervalTask();
+                            int inter = viewer.readInt("");
+                            Date endDate = viewer.getDate(viewer.addEndTask());
 
-                    if (inp == 9) {
-                        TaskManagerView.addIntervalTask();
-                        String b = in.readLine();
-                        int inter = Integer.parseInt(b);
-                        Date endDate = viewer.getDate(TaskManagerView.addEndTask());
+                            Task task = new Task(name, date, endDate, inter);
 
-                        Task task = new Task(name, date, endDate, inter);
-
-                        tasksNew.add(task);
-                    } else {
-                        Task task = new Task(name, date);
-                        tasksNew.add(task);
-                    }
+                            tasksNew.add(task);
+                        } else {
+                            Task task = new Task(name, date);
+                            tasksNew.add(task);
+                        }
                     break;
                 case 2:
-                    if (tasksNew.size() >= 0) {
-                        TaskManagerView.listTask(tasksNew);
-                        TaskManagerView.nomer();
-                        String x = in.readLine();
-                        int i = Integer.parseInt(x);
+                    if (tasksNew.size() >0) {
+                        viewer.listTask(tasksNew);
+                        viewer.nomer();
+                        int i = viewer.readInt("");
                         if(tasksNew.size() > i ){
                             Task task3 = tasksNew.getTask(i);
-                            TaskManagerView.edit();
-                            String b = in.readLine();
-                            int input1 = Integer.parseInt(b);
+                            viewer.edit();
+                            int input1 = viewer.readInt("");
                             switch (input1) {
                                 case 1:
-                                    String name1 = viewer.readName(TaskManagerView.addNameTask());
+                                    String name1 = viewer.readName(viewer.addNameTask());
                                     task3.setTitle(name1);
                                     break;
                                 case 2:
-                                    Date c = viewer.getDate(TaskManagerView.addDateTask());
+                                    Date c = viewer.getDate(viewer.addDateTask());
                                     task3.setTime(c);
                                     break;
                                 case 3:
-                                    TaskManagerView.addIntervalTask();
-                                    String w = in.readLine();
-                                    task3.setInterval(Integer.parseInt(w));
+                                    int u = viewer.readInt("");
+                                    task3.setInterval(u);
                                     break;
                                 case 4:
-                                    Date d = viewer.getDate(TaskManagerView.addEndTask());
+                                    Date d = viewer.getDate(viewer.addEndTask());
                                     task3.setTime(d);
                                     break;
                                 case 5:
-                                    TaskManagerView.exit();
+                                    viewer.exit();
                                     in.readLine();
                                     break;
                             }
                         } else {
-                            TaskManagerView.noTask();
+                            viewer.noTask();
                         }
                     }
                     break;
@@ -110,30 +104,28 @@ public class TaskManagerController {
                 case 3:
                     boolean l = false;
                     if (tasksNew.size() != 0) {
-                        TaskManagerView.listTask(tasksNew);
-                        TaskManagerView.nomer();
-                        String c = in.readLine();
+                        viewer.listTask(tasksNew);
+                        int s = viewer.readInt("");
                         for (int i = 0; i < tasksNew.size(); ++i) {
-                            int s = Integer.parseInt(c);
                             if (i == s)
                                 l = true;
                             tasksNew.remove(tasksNew.getTask(i));
                         }
                     }
                     if (l) {
-                        TaskManagerView.delite();
+                        viewer.delite();
                     } else {
-                        TaskManagerView.noTask();
+                        viewer.noTask();
                     }
                     break;
 
                 /* sostoyanie zadachi*/
                 case 4:
-                    TaskManagerView.statusTask(tasksNew);
+                    viewer.statusTask(tasksNew);
                     break;
                 //listName zadach
                 case 5:
-                    TaskManagerView.calendar(tasksNew, TaskManagerView.addDateTask());
+                    viewer.calendar(tasksNew, viewer.addDateTask());
                     break;
                 case 6:
                     TaskIO.writeText(tasksNew, file);
